@@ -33,11 +33,21 @@ body::before {
   inset: -10%;
   z-index: -1;
   background:
-    radial-gradient(38% 32% at 12% 8%, rgba(79, 140, 255, 0.32), transparent 70%),
-    radial-gradient(34% 28% at 88% 12%, rgba(139, 92, 246, 0.24), transparent 70%),
-    radial-gradient(46% 38% at 50% 105%, rgba(56, 189, 248, 0.16), transparent 70%);
+    radial-gradient(38% 32% at 12% 8%, rgba(79, 140, 255, 0.42), transparent 70%),
+    radial-gradient(34% 28% at 88% 12%, rgba(139, 92, 246, 0.34), transparent 70%),
+    radial-gradient(46% 38% at 50% 105%, rgba(56, 189, 248, 0.24), transparent 70%);
   filter: blur(60px);
   pointer-events: none;
+  animation: meshDrift 16s ease-in-out infinite alternate;
+}
+
+@keyframes meshDrift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-3%, 2%, 0) scale(1.08);
+  }
 }
 
 .app-header {
@@ -51,11 +61,25 @@ body::before {
   font-size: clamp(1.8rem, 6vw, 2.6rem);
   font-weight: 800;
   letter-spacing: 0.01em;
-  background: linear-gradient(90deg, #4f8cff, #7bd8ff);
+  background: linear-gradient(90deg, #4f8cff, #38bdf8, #8b5cf6, #4f8cff);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 22px rgba(79, 140, 255, 0.35));
+  filter: drop-shadow(0 0 26px rgba(79, 140, 255, 0.45));
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .tagline {
@@ -87,7 +111,10 @@ body::before {
   background: var(--surface);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  box-shadow:
+    0 0 0 1px rgba(79, 140, 255, 0.2),
+    0 0 44px rgba(79, 140, 255, 0.16),
+    0 12px 32px rgba(0, 0, 0, 0.4);
   transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
@@ -140,12 +167,26 @@ body::before {
   background: linear-gradient(135deg, #4f8cff, #6ea0ff);
   color: white;
   box-shadow: 0 8px 20px rgba(79, 140, 255, 0.35);
+  animation: btnPulse 2.4s ease-in-out infinite;
 }
 
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, #6ea0ff, #8bb4ff);
-  box-shadow: 0 10px 26px rgba(79, 140, 255, 0.45);
-  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(79, 140, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+  animation: none;
+}
+
+@keyframes btnPulse {
+  0%, 100% {
+    box-shadow: 0 8px 20px rgba(79, 140, 255, 0.35);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(79, 140, 255, 0.6);
+  }
 }
 
 .btn-secondary {
@@ -219,7 +260,10 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 0 0 1px rgba(79, 140, 255, 0.16),
+    0 0 32px rgba(79, 140, 255, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .canvas-frame img,
