@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiricut - 写真背景自動削除</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1b1f2a">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="app-header">
+  <h1>Kiricut</h1>
+  <p class="tagline">写真の背景をブラウザだけで自動削除</p>
+</header>
+
+<main class="app-main">
+  <section id="drop-zone" class="drop-zone">
+    <input type="file" id="file-input" accept="image/*" hidden>
+    <div class="drop-zone-inner">
+      <p class="drop-zone-icon">🖼️</p>
+      <p>ここに写真をドラッグ&ドロップ</p>
+      <p class="or-text">または</p>
+      <button id="pick-btn" class="btn btn-primary" type="button">写真を選ぶ</button>
+    </div>
+  </section>
+
+  <section id="workspace" class="workspace hidden">
+    <div class="canvas-area">
+      <div class="canvas-pane">
+        <p class="pane-label">元の写真</p>
+        <div class="canvas-frame">
+          <img id="original-img" alt="元の写真">
+        </div>
+      </div>
+      <div class="canvas-pane">
+        <p class="pane-label">切り抜き結果</p>
+        <div class="canvas-frame checkerboard" id="result-frame">
+          <canvas id="result-canvas"></canvas>
+          <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <p id="loading-text">処理中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="bg-controls" class="bg-controls hidden">
+      <p class="controls-label">背景を選ぶ</p>
+      <div class="bg-options">
+        <button class="bg-swatch transparent-swatch selected" data-bg="transparent" title="透過"></button>
+        <button class="bg-swatch" data-bg="#ffffff" style="background:#ffffff" title="白"></button>
+        <button class="bg-swatch" data-bg="#000000" style="background:#000000" title="黒"></button>
+        <button class="bg-swatch" data-bg="#3b82f6" style="background:#3b82f6" title="青"></button>
+        <button class="bg-swatch" data-bg="#22c55e" style="background:#22c55e" title="緑"></button>
+        <input type="color" id="custom-color" class="bg-swatch color-picker" value="#f5c542" title="好きな色">
+        <button id="bg-image-btn" class="bg-swatch bg-image-swatch" title="画像を背景にする">🖼️</button>
+        <input type="file" id="bg-image-input" accept="image/*" hidden>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="download-btn" class="btn btn-primary" type="button" disabled>ダウンロード</button>
+      <button id="reset-btn" class="btn btn-secondary" type="button">別の写真を選ぶ</button>
+    </div>
+  </section>
+
+  <p id="error-message" class="error-message hidden"></p>
+</main>
+
+<footer class="app-footer">
+  <p>写真はサーバーに送信されません。すべてこの端末のブラウザ内で処理されます。</p>
+</footer>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
