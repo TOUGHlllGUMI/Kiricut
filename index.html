@@ -50,6 +50,19 @@
       </div>
     </div>
 
+    <div id="retouch-controls" class="retouch-controls hidden">
+      <p class="controls-label">はみ出た部分を消す・戻す</p>
+      <div class="retouch-toolbar">
+        <button id="erase-mode-btn" class="btn-tool selected" type="button">🧽 消しゴム</button>
+        <button id="restore-mode-btn" class="btn-tool" type="button">🖌️ 復元ブラシ</button>
+        <label class="brush-size-label">
+          ブラシサイズ
+          <input type="range" id="brush-size" min="8" max="120" value="30">
+        </label>
+        <button id="undo-retouch-btn" class="btn btn-secondary btn-small" type="button">すべて復元</button>
+      </div>
+    </div>
+
     <div id="bg-controls" class="bg-controls hidden">
       <p class="controls-label">背景を選ぶ</p>
       <div class="bg-options">

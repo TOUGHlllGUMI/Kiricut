@@ -16,11 +16,19 @@ const bgImageInput = document.getElementById("bg-image-input");
 const downloadBtn = document.getElementById("download-btn");
 const resetBtn = document.getElementById("reset-btn");
 const errorMessage = document.getElementById("error-message");
+const retouchControls = document.getElementById("retouch-controls");
+const eraseModeBtn = document.getElementById("erase-mode-btn");
+const restoreModeBtn = document.getElementById("restore-mode-btn");
+const brushSizeInput = document.getElementById("brush-size");
+const undoRetouchBtn = document.getElementById("undo-retouch-btn");
 
 const ctx = resultCanvas.getContext("2d");
 
-let cutoutBitmap = null;
+let cutoutCanvas = null;
+let originalCutoutCanvas = null;
 let currentBg = { type: "transparent" };
+let retouchMode = "erase";
+let isDrawing = false;
 
 function showError(message) {
   errorMessage.textContent = message;
@@ -56,11 +64,14 @@ async function handleFile(file) {
   dropZone.classList.add("hidden");
   workspace.classList.remove("hidden");
   bgControls.classList.add("hidden");
+  retouchControls.classList.add("hidden");
   downloadBtn.disabled = true;
   resultCanvas.width = 0;
   resultCanvas.height = 0;
-  cutoutBitmap = null;
+  cutoutCanvas = null;
+  originalCutoutCanvas = null;
   currentBg = { type: "transparent" };
+  setRetouchMode("erase");
   resetSwatchSelection(document.querySelector('.bg-swatch[data-bg="transparent"]'));
 
   setLoading(true, "モデルを準備中...");
@@ -76,12 +87,24 @@ async function handleFile(file) {
       },
     });
 
-    cutoutBitmap = await createImageBitmap(resultBlob);
+    const cutoutBitmap = await createImageBitmap(resultBlob);
+
+    cutoutCanvas = document.createElement("canvas");
+    cutoutCanvas.width = cutoutBitmap.width;
+    cutoutCanvas.height = cutoutBitmap.height;
+    cutoutCanvas.getContext("2d").drawImage(cutoutBitmap, 0, 0);
+
+    originalCutoutCanvas = document.createElement("canvas");
+    originalCutoutCanvas.width = cutoutBitmap.width;
+    originalCutoutCanvas.height = cutoutBitmap.height;
+    originalCutoutCanvas.getContext("2d").drawImage(cutoutBitmap, 0, 0);
+
     resultCanvas.width = cutoutBitmap.width;
     resultCanvas.height = cutoutBitmap.height;
     renderComposite();
 
     bgControls.classList.remove("hidden");
+    retouchControls.classList.remove("hidden");
     downloadBtn.disabled = false;
   } catch (err) {
     console.error(err);
@@ -93,7 +116,7 @@ async function handleFile(file) {
 }
 
 function renderComposite() {
-  if (!cutoutBitmap) return;
+  if (!cutoutCanvas) return;
   const w = resultCanvas.width;
   const h = resultCanvas.height;
   ctx.clearRect(0, 0, w, h);
@@ -109,7 +132,49 @@ function renderComposite() {
     ctx.drawImage(bmp, (w - drawW) / 2, (h - drawH) / 2, drawW, drawH);
   }
 
-  ctx.drawImage(cutoutBitmap, 0, 0, w, h);
+  ctx.drawImage(cutoutCanvas, 0, 0, w, h);
+}
+
+function setRetouchMode(mode) {
+  retouchMode = mode;
+  eraseModeBtn.classList.toggle("selected", mode === "erase");
+  restoreModeBtn.classList.toggle("selected", mode === "restore");
+}
+
+function getCanvasPoint(evt) {
+  const rect = resultCanvas.getBoundingClientRect();
+  const scaleX = resultCanvas.width / rect.width;
+  const scaleY = resultCanvas.height / rect.height;
+  return {
+    x: (evt.clientX - rect.left) * scaleX,
+    y: (evt.clientY - rect.top) * scaleY,
+    scale: (scaleX + scaleY) / 2,
+  };
+}
+
+function applyBrush(x, y, scale) {
+  if (!cutoutCanvas) return;
+  const radius = Number(brushSizeInput.value) * scale;
+  const cctx = cutoutCanvas.getContext("2d");
+
+  if (retouchMode === "erase") {
+    cctx.save();
+    cctx.globalCompositeOperation = "destination-out";
+    cctx.beginPath();
+    cctx.arc(x, y, radius, 0, Math.PI * 2);
+    cctx.fill();
+    cctx.restore();
+  } else {
+    cctx.save();
+    cctx.beginPath();
+    cctx.arc(x, y, radius, 0, Math.PI * 2);
+    cctx.clip();
+    cctx.clearRect(x - radius, y - radius, radius * 2, radius * 2);
+    cctx.drawImage(originalCutoutCanvas, 0, 0);
+    cctx.restore();
+  }
+
+  renderComposite();
 }
 
 dropZone.addEventListener("dragover", (e) => {
@@ -160,6 +225,43 @@ bgImageInput.addEventListener("change", async () => {
   renderComposite();
 });
 
+eraseModeBtn.addEventListener("click", () => setRetouchMode("erase"));
+restoreModeBtn.addEventListener("click", () => setRetouchMode("restore"));
+
+undoRetouchBtn.addEventListener("click", () => {
+  if (!cutoutCanvas || !originalCutoutCanvas) return;
+  const cctx = cutoutCanvas.getContext("2d");
+  cctx.clearRect(0, 0, cutoutCanvas.width, cutoutCanvas.height);
+  cctx.drawImage(originalCutoutCanvas, 0, 0);
+  renderComposite();
+});
+
+resultCanvas.addEventListener("pointerdown", (e) => {
+  if (!cutoutCanvas) return;
+  isDrawing = true;
+  try {
+    resultCanvas.setPointerCapture(e.pointerId);
+  } catch {
+    // pointer capture is best-effort; drawing still works via pointermove without it
+  }
+  const p = getCanvasPoint(e);
+  applyBrush(p.x, p.y, p.scale);
+});
+
+resultCanvas.addEventListener("pointermove", (e) => {
+  if (!isDrawing) return;
+  const p = getCanvasPoint(e);
+  applyBrush(p.x, p.y, p.scale);
+});
+
+resultCanvas.addEventListener("pointerup", () => {
+  isDrawing = false;
+});
+
+resultCanvas.addEventListener("pointerleave", () => {
+  isDrawing = false;
+});
+
 downloadBtn.addEventListener("click", () => {
   resultCanvas.toBlob((blob) => {
     const url = URL.createObjectURL(blob);
@@ -175,9 +277,11 @@ resetBtn.addEventListener("click", () => {
   fileInput.value = "";
   bgImageInput.value = "";
   originalImg.src = "";
-  cutoutBitmap = null;
+  cutoutCanvas = null;
+  originalCutoutCanvas = null;
   workspace.classList.add("hidden");
   dropZone.classList.remove("hidden");
+  retouchControls.classList.add("hidden");
   clearError();
 });
 
