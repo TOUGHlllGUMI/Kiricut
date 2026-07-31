@@ -20,7 +20,7 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  font-family: "Murecho", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
   display: flex;
   flex-direction: column;
 }
@@ -32,7 +32,7 @@ body {
 
 .app-header h1 {
   margin: 0;
-  font-family: "Unbounded", "Noto Serif JP", sans-serif;
+  font-family: "Unbounded", "Murecho", sans-serif;
   font-size: clamp(1.8rem, 6vw, 2.6rem);
   font-weight: 800;
   letter-spacing: 0.01em;
