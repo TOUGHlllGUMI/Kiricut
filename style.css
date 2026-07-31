@@ -1,5 +1,5 @@
 :root {
-  --bg: #0d0f16;
+  --bg: #07080d;
   --surface: rgba(255, 255, 255, 0.045);
   --surface-2: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.1);
@@ -46,7 +46,7 @@ body {
   height: 55vmax;
   top: -15%;
   left: -12%;
-  background: radial-gradient(circle, rgba(79, 140, 255, 0.55), transparent 70%);
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.38), transparent 70%);
   animation: blobMove1 13s ease-in-out infinite alternate;
 }
 
@@ -55,7 +55,7 @@ body {
   height: 48vmax;
   top: -10%;
   right: -14%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.48), transparent 70%);
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.32), transparent 70%);
   animation: blobMove2 17s ease-in-out infinite alternate;
 }
 
@@ -64,7 +64,7 @@ body {
   height: 60vmax;
   bottom: -25%;
   left: 20%;
-  background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent 70%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.26), transparent 70%);
   animation: blobMove3 20s ease-in-out infinite alternate;
 }
 
