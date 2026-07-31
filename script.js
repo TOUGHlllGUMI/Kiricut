@@ -1,5 +1,22 @@
 import { removeBackground } from "https://esm.sh/@imgly/background-removal@1.5.8";
 
+const starsContainer = document.querySelector(".bg-blobs");
+if (starsContainer) {
+  const starCount = 50;
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement("span");
+    star.className = "star";
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.left = `${Math.random() * 100}%`;
+    const size = Math.random() * 2 + 1;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+    star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+    star.style.animationDelay = `${Math.random() * 5}s`;
+    starsContainer.appendChild(star);
+  }
+}
+
 const dropZone = document.getElementById("drop-zone");
 const fileInput = document.getElementById("file-input");
 const pickBtn = document.getElementById("pick-btn");
