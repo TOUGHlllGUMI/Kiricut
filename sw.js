@@ -1,4 +1,4 @@
-const CACHE_NAME = "kiricut-cache-v2";
+const CACHE_NAME = "kiricut-cache-v3";
 const PRECACHE_URLS = [
   "./",
   "./index.html",

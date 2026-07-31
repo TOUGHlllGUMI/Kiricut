@@ -20,7 +20,7 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  font-family: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
+  font-family: "Zen Maru Gothic", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
   display: flex;
   flex-direction: column;
 }
@@ -32,9 +32,10 @@ body {
 
 .app-header h1 {
   margin: 0;
+  font-family: "Unbounded", "Zen Maru Gothic", sans-serif;
   font-size: clamp(1.8rem, 6vw, 2.6rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: 0.01em;
   background: linear-gradient(90deg, #4f8cff, #7bd8ff);
   -webkit-background-clip: text;
   background-clip: text;
