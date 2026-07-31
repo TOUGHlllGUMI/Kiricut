@@ -19,6 +19,20 @@
   <span class="blob blob-2"></span>
   <span class="blob blob-3"></span>
 </div>
+<div id="password-gate" class="password-gate">
+  <div class="gate-card">
+    <p class="gate-icon">🔒</p>
+    <h2>Kiricut</h2>
+    <p class="gate-text">パスワードを入力してください</p>
+    <form id="gate-form" autocomplete="off">
+      <input type="password" id="gate-input" placeholder="パスワード" autocomplete="off">
+      <button type="submit" class="btn btn-primary">入る</button>
+    </form>
+    <p id="gate-error" class="gate-error hidden">パスワードが違います</p>
+  </div>
+</div>
+
+<div id="app-content" class="hidden">
 <header class="app-header">
   <h1>Kiricut</h1>
   <p class="tagline">写真の背景をブラウザだけで自動削除</p>
@@ -94,6 +108,7 @@
 <footer class="app-footer">
   <p>写真はサーバーに送信されません。すべてこの端末のブラウザ内で処理されます。</p>
 </footer>
+</div>
 
 <script type="module" src="script.js"></script>
 </body>

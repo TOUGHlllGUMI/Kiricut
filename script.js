@@ -1,5 +1,35 @@
 import { removeBackground } from "https://esm.sh/@imgly/background-removal@1.5.8";
 
+const GATE_PASSWORD = "qaz239";
+const GATE_AUTH_KEY = "kiricut-auth";
+const passwordGate = document.getElementById("password-gate");
+const appContent = document.getElementById("app-content");
+const gateForm = document.getElementById("gate-form");
+const gateInput = document.getElementById("gate-input");
+const gateError = document.getElementById("gate-error");
+
+function unlockApp() {
+  passwordGate.classList.add("hidden");
+  appContent.classList.remove("hidden");
+}
+
+if (localStorage.getItem(GATE_AUTH_KEY) === "true") {
+  unlockApp();
+}
+
+gateForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (gateInput.value === GATE_PASSWORD) {
+    localStorage.setItem(GATE_AUTH_KEY, "true");
+    gateError.classList.add("hidden");
+    unlockApp();
+  } else {
+    gateError.classList.remove("hidden");
+    gateInput.value = "";
+    gateInput.focus();
+  }
+});
+
 const starsContainer = document.querySelector(".bg-blobs");
 if (starsContainer) {
   const starCount = 50;
