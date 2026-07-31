@@ -27,26 +27,71 @@ body {
   overflow-x: hidden;
 }
 
-body::before {
-  content: "";
+.bg-blobs {
   position: fixed;
-  inset: -10%;
+  inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(38% 32% at 12% 8%, rgba(79, 140, 255, 0.42), transparent 70%),
-    radial-gradient(34% 28% at 88% 12%, rgba(139, 92, 246, 0.34), transparent 70%),
-    radial-gradient(46% 38% at 50% 105%, rgba(56, 189, 248, 0.24), transparent 70%);
-  filter: blur(60px);
+  overflow: hidden;
   pointer-events: none;
-  animation: meshDrift 16s ease-in-out infinite alternate;
 }
 
-@keyframes meshDrift {
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+}
+
+.blob-1 {
+  width: 55vmax;
+  height: 55vmax;
+  top: -15%;
+  left: -12%;
+  background: radial-gradient(circle, rgba(79, 140, 255, 0.55), transparent 70%);
+  animation: blobMove1 13s ease-in-out infinite alternate;
+}
+
+.blob-2 {
+  width: 48vmax;
+  height: 48vmax;
+  top: -10%;
+  right: -14%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.48), transparent 70%);
+  animation: blobMove2 17s ease-in-out infinite alternate;
+}
+
+.blob-3 {
+  width: 60vmax;
+  height: 60vmax;
+  bottom: -25%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.4), transparent 70%);
+  animation: blobMove3 20s ease-in-out infinite alternate;
+}
+
+@keyframes blobMove1 {
   0% {
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate(0, 0) scale(1);
   }
   100% {
-    transform: translate3d(-3%, 2%, 0) scale(1.08);
+    transform: translate(14%, 16%) scale(1.25);
+  }
+}
+
+@keyframes blobMove2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-16%, 14%) scale(1.2);
+  }
+}
+
+@keyframes blobMove3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(10%, -14%) scale(1.3);
   }
 }
 
