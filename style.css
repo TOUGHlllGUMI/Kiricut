@@ -1,8 +1,8 @@
 :root {
-  --bg: #12141c;
-  --surface: #1b1f2a;
-  --surface-2: #242a38;
-  --border: #333a4a;
+  --bg: #0d0f16;
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.1);
   --text: #eef0f5;
   --text-muted: #9aa2b1;
   --accent: #4f8cff;
@@ -16,6 +16,7 @@
 }
 
 body {
+  position: relative;
   margin: 0;
   min-height: 100vh;
   background: var(--bg);
@@ -23,6 +24,20 @@ body {
   font-family: "Murecho", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  z-index: -1;
+  background:
+    radial-gradient(38% 32% at 12% 8%, rgba(79, 140, 255, 0.32), transparent 70%),
+    radial-gradient(34% 28% at 88% 12%, rgba(139, 92, 246, 0.24), transparent 70%),
+    radial-gradient(46% 38% at 50% 105%, rgba(56, 189, 248, 0.16), transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
 }
 
 .app-header {
@@ -40,12 +55,18 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 22px rgba(79, 140, 255, 0.35));
 }
 
 .tagline {
-  margin: 0.4rem 0 0;
+  display: inline-block;
+  margin: 0.7rem auto 0;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  font-size: clamp(0.78rem, 2.5vw, 0.9rem);
 }
 
 .app-main {
@@ -61,15 +82,19 @@ body {
 
 .drop-zone {
   border: 2px dashed var(--border);
-  border-radius: 16px;
+  border-radius: 20px;
   padding: clamp(2rem, 8vw, 4rem) 1rem;
   background: var(--surface);
-  transition: border-color 0.2s, background 0.2s;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
 .drop-zone.dragover {
   border-color: var(--accent);
-  background: var(--surface-2);
+  background: rgba(79, 140, 255, 0.08);
+  box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.15), 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 .drop-zone-inner {
@@ -99,7 +124,7 @@ body {
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.1s, background 0.2s, opacity 0.2s;
+  transition: transform 0.15s, background 0.2s, opacity 0.2s, box-shadow 0.2s;
 }
 
 .btn:active {
@@ -112,12 +137,15 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, #4f8cff, #6ea0ff);
   color: white;
+  box-shadow: 0 8px 20px rgba(79, 140, 255, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--accent-hover);
+  background: linear-gradient(135deg, #6ea0ff, #8bb4ff);
+  box-shadow: 0 10px 26px rgba(79, 140, 255, 0.45);
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -127,13 +155,26 @@ body {
 }
 
 .btn-secondary:hover {
-  background: #2c3345;
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-1px);
 }
 
 .workspace {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .hidden {
@@ -169,13 +210,16 @@ body {
 .canvas-frame {
   position: relative;
   background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .canvas-frame img,
@@ -188,6 +232,7 @@ body {
 }
 
 .checkerboard {
+  background-color: #1b1f2a;
   background-image:
     linear-gradient(45deg, #2a2f3d 25%, transparent 25%),
     linear-gradient(-45deg, #2a2f3d 25%, transparent 25%),
@@ -229,12 +274,15 @@ body {
 
 .retouch-controls {
   background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .retouch-toolbar {
@@ -275,12 +323,15 @@ body {
 
 .bg-controls {
   background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .controls-label {
